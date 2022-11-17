@@ -1,5 +1,6 @@
 # Python script to generate ASCII art from an image
 
+import sys
 from PIL import Image
 from PIL import ImageStat
 
@@ -17,7 +18,13 @@ def regionBrightness(img):
     return stat.mean[0]
 
 
-image = Image.open("docs/example.jpg")
+# Check if a filename is provided
+if len(sys.argv) < 2:
+    print("Usage: python asciiart.py <image_file>")
+    sys.exit(1)
+
+image = Image.open(sys.argv[1])
+
 # Convert image to grayscale (ITU-R 601-2 luma transform)
 image = image.convert("L")
 width, height = image.size
