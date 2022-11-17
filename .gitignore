@@ -1,0 +1,10 @@
+# Dir
+docs/*
+.vscode/
+
+# File
+*.code-workspace
+asciiart.txt
+
+# Allow
+!docs/example.jpg
