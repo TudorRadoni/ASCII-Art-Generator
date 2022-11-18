@@ -4,16 +4,18 @@ import sys
 from PIL import Image
 from PIL import ImageStat
 
-grayscale_ramp = " .`:,;'_^\"\\></-!~=)(|j?}{ ][ti+l7v1%yrfcJ32uIC$zwo96sngaT5qpkYVOL40&mG8*xhedbZUSAQPFDXWK#RNEHBM@"
+# Font size including line spacing
+w = 12
+h = 24
+
+grayscale_ramp = r"""$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'. """ [::-1]
 
 
-def brightness2gray(brightness):
-    # Convert brightness to character
-    # 0 is black, 255 is white
+def brightness2char(brightness):
     return (grayscale_ramp[int(brightness / 255 * (len(grayscale_ramp) - 1))])
 
 
-def regionBrightness(img):
+def getBrightness(img):
     stat = ImageStat.Stat(img)
     return stat.mean[0]
 
@@ -24,35 +26,19 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 image = Image.open(sys.argv[1])
-
-# Convert image to grayscale (ITU-R 601-2 luma transform)
-image = image.convert("L")
+image = image.convert("L") # Convert image to grayscale (ITU-R 601-2 luma transform)
 width, height = image.size
 
-w = round(width * 0.005)
-h = round(height * 0.01)
-
-cnt_r = 0
-cnt_c = 0
+x = 0
+y = 0
 outputFile = open("asciiart.txt", "w")
-for row in range(height):  # careful: first and last row is not processed
-    if (cnt_r == h):
-        cnt_r = 0
-
-        for col in range(width):
-            if (cnt_c == w):
-                cnt_c = 0
-
-                box = (col - 10, row - 10, col, row)
-                region = image.crop(box)
-                brightness = regionBrightness(region)
-                # print(brightness2gray(brightness) + " ", end="")
-                outputFile.write(brightness2gray(brightness))
-
-            cnt_c += 1
-        # print("\n")
-        outputFile.write("\r")
-
-    cnt_r += 1
-
+while (y < height):
+    while (x < width):
+        tile = image.crop((x, y, x + w, y + h))
+        brightness = getBrightness(tile)
+        outputFile.write(brightness2char(brightness))
+        x += w
+    x = 0
+    y += h
+    outputFile.write("\n")
 outputFile.close()
