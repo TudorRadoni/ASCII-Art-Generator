@@ -1,11 +1,25 @@
 # Dir
 docs/*
 .vscode/
+__pycache__/
+venv/
+env/
+.venv/
+.env/
 
 # File
 *.code-workspace
 asciiart.txt
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
 
 # Allow
 !docs/example.jpg
 !docs/logo.png
+
+# Environment variables
+.env
