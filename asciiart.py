@@ -6,8 +6,8 @@ from PIL import Image
 from PIL import ImageStat
 
 # Font size including line spacing
-w = 1
-h = 2
+w = 2
+h = 4
 
 grayscale_ramp = r"""@%#*+=-:. """ [::-1]
 # grayscale_ramp = r"""$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'. """ [::-1]
@@ -61,7 +61,16 @@ def genetic_algorithm_for_bright_parts(x, y, image, population_size=len(grayscal
         scored = [(fitness_char(ind, x, y, image), ind) for ind in population] # Evaluate fitness of each individual
         scored.sort(key=lambda x: x[0], reverse=True) # Sort population by fitness
         best_fitness = scored[0][0]
-        print(f"Generation {generation + 1}, Best Fitness: {best_fitness}")
+        # print(f"Generation {generation + 1}, Fitness: {best_fitness}")
+        
+        # Print generation and fitness
+        print(f"Generation {generation + 1}, Fitness: {best_fitness}", end='\r')
+        # # Print progress bar
+        # progress = (generation + 1) / generations
+        # bar_length = 40
+        # block = int(round(bar_length * progress))
+        # text = f"[{'#' * block}{'-' * (bar_length - block)}] {int(progress * 100)}%"
+        # print(text, end='\r')
         
         # Select top individuals and perform crossover
         population = []
@@ -73,8 +82,8 @@ def genetic_algorithm_for_bright_parts(x, y, image, population_size=len(grayscal
         for i in range(len(population)):
             if random.random() < mutation_rate:
                 population[i] = mutate_char(population[i])
-    best = sorted([(fitness_char(ind, x, y, image), ind)
-                  for ind in population], key=lambda x: x[0], reverse=True)[0][1]
+                
+    best = sorted([(fitness_char(ind, x, y, image), ind) for ind in population], key=lambda x: x[0], reverse=True)[0][1]
     return best
 
 
@@ -88,9 +97,20 @@ image = Image.open(sys.argv[1])
 image = image.convert("L")
 width, height = image.size
 
+
+# Calculate the number of tiles
+num_tiles_x = (width + w - 1) // w
+num_tiles_y = (height + h - 1) // h
+total_tiles = num_tiles_x * num_tiles_y
+
+# Print the number of tiles
+print(f"The image will be split into {total_tiles} tiles.")
+
+
 x = 0
 y = 0
-outputFile = open("output.txt", "w")
+outputPath = "output.txt"
+outputFile = open(outputPath, "w")
 while (y < height):
     while (x < width):
         tile = image.crop((x, y, x + w, y + h))
@@ -101,3 +121,6 @@ while (y < height):
     y += h
     outputFile.write("\n")
 outputFile.close()
+
+# Print completion message
+print(f"Done! Check out ur masterpiece saved in {outputPath}")
