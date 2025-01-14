@@ -2,6 +2,14 @@
 
 <img src="docs/logo.png" alt="Logo" width="60%" height="60%">
 
+⚠️ WARNING: The script has been updated to use Genetic Algorithms for drawing the bright parts of the image. The script is **less efficient, slower** and produces **similar to worse results** than before. ⚠️
+
+You might say: *"But Tudor... Why?? Why would you do that??? Why would you break a perfectly fine script??"* Well, I had to do a Uni project using GAs, so I thought I'd add them here.
+
+The README will be updated soon.
+
+P.S.: U can find the old script if you scrape the repo's history. I promise it's short xd.
+
 ## Brief description of the algorithm
 
 1. Set width and height of the font
